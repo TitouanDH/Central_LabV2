@@ -416,8 +416,11 @@ def disconnect(request):
                 if linkA.dut.reserv.creator != request.user or linkB.dut.reserv.creator != request.user:
                     back.append({"Fail" : "One of the DUTs is not yours."})
                     continue
-                
-                if linkA.deleteService() and linkB.deleteService():
+
+                if linkA.dut == linkB.dut:
+                    if linkA.deleteService() or linkB.deleteService():
+                        back.append({"Success" : "Disconnection between {} {} and {} {}".format(linkA.dut, linkA.dut_port, linkB.dut, linkB.dut_port)})
+                elif linkA.deleteService() and linkB.deleteService():
                     back.append({"Success" : "Disconnection between {} {} and {} {}".format(linkA.dut, linkA.dut_port, linkB.dut, linkB.dut_port)})
                 else:
                     back.append({"Fail" : "Tunnel not removed"})
