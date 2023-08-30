@@ -64,7 +64,7 @@ def login(request):
     """
     {
         "username": "admin",
-        "password": "Letacla01*"
+        "password": "admin123"
     }
     """
     user = get_object_or_404(User, username=request.data['username'])
@@ -81,7 +81,7 @@ def signup(request):
     """
     {
         "username": "test2",
-        "password": "Letacla01*"
+        "password": "test123"
     }
     """
     serializer = UserSerializer(data=request.data)
@@ -368,10 +368,59 @@ def connect(request):
                 else:
                     SERVICE += 1
                 
-                linkA.setService(SERVICE, BVLAN)
-                linkB.setService(SERVICE, BVLAN)
+                if linkA.setService(SERVICE, BVLAN) and linkB.setService(SERVICE, BVLAN):
+                    back.append({"Success" : "Connection between {} {} and {} {}".format(linkA.dut, linkA.dut_port, linkB.dut, linkB.dut_port)})
+                else:
+                    back.append({"Fail" : "Tunnel not created"})
+            else:
+                back.append({"Fail" : "Wrong formating of the port"})
 
-                back.append({"Success" : "Connection between {} {} and {} {}".format(linkA.dut, linkA.dut_port, linkB.dut, linkB.dut_port)})
+
+        return Response({"duts": back}, status=status.HTTP_200_OK)
+
+    return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def disconnect(request):
+    """
+    Structure :
+    {
+        "links": [
+            {
+                "portA": 68,
+                "portB": 419
+            },
+            {
+                "portA": 68,
+                "portB": 419
+            }
+        ]
+    }
+    """
+    if 'links' in request.data:
+        links = request.data['links']
+        back = []
+        for item in links:
+            if 'portA' in item and 'portB' in item:
+                linkA = get_object_or_404(Link, id=item['portA'])
+                linkB = get_object_or_404(Link, id=item['portB'])
+
+                if linkA.dut.reserv == None or linkB.dut.reserv == None:
+                    back.append({"Fail" : "One of the DUTs is not reserved."})
+                    continue
+
+                if linkA.dut.reserv.creator != request.user or linkB.dut.reserv.creator != request.user:
+                    back.append({"Fail" : "One of the DUTs is not yours."})
+                    continue
+                
+                if linkA.deleteService() and linkB.deleteService():
+                    back.append({"Success" : "Disconnection between {} {} and {} {}".format(linkA.dut, linkA.dut_port, linkB.dut, linkB.dut_port)})
+                else:
+                    back.append({"Fail" : "Tunnel not removed"})
             else:
                 back.append({"Fail" : "Wrong formating of the port"})
 

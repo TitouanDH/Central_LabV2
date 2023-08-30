@@ -62,10 +62,10 @@ def cli(ip,header, cmd):
             return output
 
     elif r.status_code == 400 or r.status_code == 401:
-        raise Exception('Code ' + r.status_code)
+        raise Exception('Code ' + str(r.status_code))
 
     else:  # NOT OK
-        raise Exception('Unknown error code ' + r.status_code)
+        raise Exception('Unknown error code ' + str(r.status_code))
 
 
 class Reservation(models.Model):
@@ -220,8 +220,8 @@ class Link(models.Model):
             return True
         return False
     
-    def deleteService(self, service):
-        if self.delete_tunnel(service):
+    def deleteService(self):
+        if self.delete_tunnel(self.service):
             self.service = None
             self.save()
             return True
