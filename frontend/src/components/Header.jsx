@@ -1,16 +1,29 @@
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Link, useNavigate } from "react-router-dom";
+import { useIsAuthenticated, useSignOut } from 'react-auth-kit';
 
 export default function Header() {
+  const isAuthenticated = useIsAuthenticated()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authenticated, setAuthenticated] = useState(isAuthenticated);
+  const signOut = useSignOut()
+  const redirect = useNavigate()
 
   const navigation = [
-    { name: "Product", href: "#" },
-    { name: "Features", href: "#" },
-    { name: "Marketplace", href: "#" },
-    { name: "Company", href: "#" },
+    { name: "Reservations", href: "/reservation" },
+    { name: "Equipments", href: "/equipment" },
+    { name: "Connection", href: "/connection" },
+    { name: "Administration", href: "/administration" },
+    { name: "About", href: "/about" },
   ];
+
+  const logout = () => {
+    setAuthenticated(false)
+    signOut()
+    redirect('/')
+  }
 
   return (
     <header className="absolute inset-x-0 top-0 z-50">
@@ -23,7 +36,7 @@ export default function Header() {
             <span className="sr-only">Your Company</span>
             <img
               className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+              src="/favicon.ico"
               alt=""
             />
           </a>
@@ -40,19 +53,26 @@ export default function Header() {
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <a
+            <Link
               key={item.name}
-              href={item.href}
+              to={item.href}
               className="text-sm font-semibold leading-6 text-gray-900"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          {
+            authenticated ?
+              <button onClick={logout} className="text-sm font-semibold leading-6 text-gray-900">
+                Log out <span aria-hidden="true">&rarr;</span>
+              </button>
+              :
+              <Link to="/login" className="text-sm font-semibold leading-6 text-gray-900">
+                Log in <span aria-hidden="true">&rarr;</span>
+              </Link>
+          }
         </div>
       </nav>
       <Dialog
@@ -65,10 +85,10 @@ export default function Header() {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+              <span className="sr-only">Alcatel-Lucent Enterprise</span>
               <img
                 className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                src="/favicon.ico"
                 alt=""
               />
             </a>

@@ -1,31 +1,26 @@
-/* eslint-disable react/prop-types */
 import Axios from "../Axios";
-import { useSignIn } from "react-auth-kit";
 import { useNavigate } from 'react-router-dom'
 
-export default function SignIn() {
-  const signin = useSignIn();
+export default function SignUp() {
   const redirect = useNavigate()
 
-  const login = async (e) => {
+  const register = async (e) => {
     e.preventDefault();
     let json = {};
     const formData = new FormData(e.currentTarget)
-    formData.forEach((value, key) => json[key] = value)
+    formData.forEach((value, key) => {
+      // Exclude password from initial user data
+      if (key !== 'password') {
+        json[key] = value;
+      }
+    });
+
     try {
-      const response = await Axios.post("login/", json);
-      signin({
-        token: response.data.token,
-        tokenType: "Token",
-        expiresIn: 3600,
-        authState: {
-          id: response.data.user.id,
-          username: response.data.user.username,
-        },
-      });
-
-      redirect('/')
-
+      const response = await Axios.post("signup/", json);
+      // Check if token exists in the response
+      if (response.data.token) {
+        redirect('/')
+      }
     } catch (e) {
       console.log(e);
     }
@@ -41,12 +36,12 @@ export default function SignIn() {
             alt="Your Company"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account
+            Create your account
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={login}>
+          <form className="space-y-6" onSubmit={register}>
             <div>
               <label
                 htmlFor="username"
@@ -59,7 +54,7 @@ export default function SignIn() {
                   id="username"
                   name="username"
                   type="text"
-                  autoComplete="text"
+                  autoComplete="username"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2"
                 />
@@ -67,28 +62,37 @@ export default function SignIn() {
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Password
-                </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Password
+              </label>
               <div className="mt-2">
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Confirm Password
+              </label>
+              <div className="mt-2">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-2"
                 />
@@ -100,18 +104,18 @@ export default function SignIn() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Sign Up
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member?{" "}
+            Already a member?{" "}
             <a
-              href="signup"
+              href="login"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
-              Sign-up
+              Sign-in
             </a>
           </p>
         </div>

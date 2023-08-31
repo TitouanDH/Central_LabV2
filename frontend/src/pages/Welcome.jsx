@@ -1,14 +1,13 @@
-import { Header, Footer, Hero } from "../components";
-import { RequireAuth } from "react-auth-kit";
+import { Header, Footer, Hero, Features, Stats } from "../components";
 
 export default function Welcome() {
   return (
     <>
-      <RequireAuth loginPath="/login">
         <Header />
         <Hero />
+        <Stats/>
+        <Features/>
         <Footer />
-      </RequireAuth>
     </>
   );
 }
