@@ -2,7 +2,7 @@ import axios from "axios";
 
 const Axios = axios.create({
   // .. where we make our configurations
-  baseURL: "http://10.255.120.133/api/",
+  baseURL: "http://127.0.0.1:8000/api/",
 });
 
 Axios.defaults.headers = {

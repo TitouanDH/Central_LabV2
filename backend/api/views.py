@@ -120,6 +120,7 @@ def welcome(request):
             "/delete_reservation/<str:pk>/",
             "/update_reservation/<str:pk>/",
             "/list_reservation/all/",
+            "/view/stats/"
             "/list_reservation/",
             "/list_reservation/<str:pk>/",
             "/reserve/",
@@ -427,7 +428,6 @@ def disconnect(request):
             else:
                 back.append({"Fail" : "Wrong formating of the port"})
 
-
         return Response({"duts": back}, status=status.HTTP_200_OK)
 
     return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
@@ -446,3 +446,6 @@ def list_link_by_dut(request):
         return Response({"available": available_serializer.data, "connected": connected_serializer.data}, status=status.HTTP_200_OK)
     return Response({"detail": "Param not valid."}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def stats(request):
+    return Response({'users' : len(User.objects.all()), 'duts' : len(Dut.objects.all()), 'reservations' : len(Reservation.objects.all())}, status=status.HTTP_200_OK)

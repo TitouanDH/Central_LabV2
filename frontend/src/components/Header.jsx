@@ -22,6 +22,7 @@ export default function Header() {
   const logout = () => {
     setAuthenticated(false)
     signOut()
+    Axios.defaults.headers['Authorization'] = ``
     redirect('/')
   }
 

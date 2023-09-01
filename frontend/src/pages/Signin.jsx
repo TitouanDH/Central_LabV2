@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import Axios from "../Axios";
 import { useSignIn } from "react-auth-kit";
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function SignIn() {
   const signin = useSignIn();
@@ -23,7 +23,7 @@ export default function SignIn() {
           username: response.data.user.username,
         },
       });
-
+      Axios.defaults.headers['Authorization'] = `Token ${response.data.token}`
       redirect('/')
 
     } catch (e) {
@@ -107,12 +107,12 @@ export default function SignIn() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{" "}
-            <a
-              href="signup"
+            <Link
+              to="/signup"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Sign-up
-            </a>
+            </Link>
           </p>
         </div>
       </div>

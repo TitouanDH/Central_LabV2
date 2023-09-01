@@ -1,25 +1,21 @@
 import Axios from "../Axios";
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
-  const redirect = useNavigate()
+  const redirect = useNavigate();
 
   const register = async (e) => {
     e.preventDefault();
     let json = {};
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(e.currentTarget);
     formData.forEach((value, key) => {
-      // Exclude password from initial user data
-      if (key !== 'password') {
-        json[key] = value;
-      }
+      json[key] = value;
     });
 
     try {
       const response = await Axios.post("signup/", json);
-      // Check if token exists in the response
       if (response.data.token) {
-        redirect('/')
+        redirect('/login');
       }
     } catch (e) {
       console.log(e);
@@ -111,12 +107,12 @@ export default function SignUp() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a member?{" "}
-            <a
-              href="login"
+            <Link
+              to="/login"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Sign-in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
