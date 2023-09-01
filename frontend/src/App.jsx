@@ -10,7 +10,7 @@ const App = () => {
       cookieDomain={window.location.hostname}
       cookieSecure={true}
     >
-      <BrowserRouter>
+      <BrowserRouter basename="/v2">
         <Routes>
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
