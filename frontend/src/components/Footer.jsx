@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-5">
               <a className="flex items-center">
-                  <img src="/favicon.ico" className="h-8 mr-3" alt="FlowBite Logo" />
+                  <img src="/v2/favicon.ico" className="h-8 mr-3" alt="FlowBite Logo" />
                   <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Central Lab</span>
               </a>
           </div>

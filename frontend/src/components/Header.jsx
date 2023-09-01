@@ -37,7 +37,7 @@ export default function Header() {
             <span className="sr-only">Your Company</span>
             <img
               className="h-8 w-auto"
-              src="/favicon.ico"
+              src="/v2/favicon.ico"
               alt=""
             />
           </a>
@@ -89,7 +89,7 @@ export default function Header() {
               <span className="sr-only">Alcatel-Lucent Enterprise</span>
               <img
                 className="h-8 w-auto"
-                src="/favicon.ico"
+                src="/v2/favicon.ico"
                 alt=""
               />
             </a>
