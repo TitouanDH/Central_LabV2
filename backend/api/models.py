@@ -72,8 +72,8 @@ class Reservation(models.Model):
     id = models.AutoField(primary_key=True)
     end = models.DateTimeField()
     creator =  models.ForeignKey(User, models.CASCADE, null=False)
-    name = models.CharField(max_length=45)
-    purpose = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=125)
+    purpose = models.CharField(max_length=1024, blank=True, null=True)
 
     def unlinkAll(self):
         duts = Dut.objects.filter(reserv=self.id)

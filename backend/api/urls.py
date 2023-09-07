@@ -11,6 +11,7 @@ urlpatterns = [
     path('create_reservation/', views.create_reservation),
     path('delete_reservation/<str:pk>/', views.delete_reservation),
     path('update_reservation/<str:pk>/', views.update_reservation),
+    path('get_reservation/<str:pk>/', views.get_reservation),
     path('list_reservation/all/', views.list_all_reservation),
     path('view/stats/', views.stats),
     path('list_reservation/', views.list_reservation_by_user),

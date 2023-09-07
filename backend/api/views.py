@@ -120,6 +120,7 @@ def welcome(request):
             "/delete_reservation/<str:pk>/",
             "/update_reservation/<str:pk>/",
             "/list_reservation/all/",
+            "/get_reservation/<str:pk>/",
             "/view/stats/"
             "/list_reservation/",
             "/list_reservation/<str:pk>/",
@@ -145,6 +146,7 @@ def create_reservation(request):
         duration = request.data['duration']
         request.data['end'] = datetime.datetime.now() + datetime.timedelta(hours=int(duration))
         request.data.pop('duration')
+        request.data['creator']=request.user.id
 
     serializer = ReservationSerializer(data=request.data)
     if serializer.is_valid():
@@ -192,6 +194,16 @@ def update_reservation(request, pk):
         else:
             return Response({"detail": "reservation ownership is False."}, status=status.HTTP_401_UNAUTHORIZED)
 
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_reservation(request, pk):
+    reservation = get_object_or_404(Reservation, id=pk)
+    if reservation.name and reservation.end and reservation.purpose:
+        return Response({"name" : reservation.name, "end" : reservation.end, "purpose" : reservation.purpose}, status=status.HTTP_200_OK)
+    serializer = ReservationSerializer(instance=reservation)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
